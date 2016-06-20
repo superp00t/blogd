@@ -7,7 +7,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"path/filepath"
 	"sort"
 	"time"
 	"flag"
@@ -83,15 +82,9 @@ func main() {
 	flag.StringVar(&ListenIP, "listen", "127.0.0.1:8080", "The IP to listen on.") 
 	flag.Parse()
 
-	assets, err := filepath.Abs("assets")
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir(assets))))
+	http.Handle("/blog/assets/", http.StripPrefix("/blog/assets/", http.FileServer(http.Dir("assets"))))
 
 	go blogMain()
-	http.HandleFunc("/", blogHandler)
+	http.HandleFunc("/blog", blogHandler)
 	log.Fatal(http.ListenAndServe(ListenIP, nil))
 }
